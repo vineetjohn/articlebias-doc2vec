@@ -23,3 +23,7 @@ def extract_training_parameters(doc2vec_model, sentiment_scores_dict):
 
 def persist_model_to_disk(model, model_path):
     joblib.dump(model, model_path)
+
+
+def get_model_from_disk(model_path):
+    return joblib.load(model_path)

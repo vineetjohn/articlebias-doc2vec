@@ -8,7 +8,8 @@ def main(argv):
 
     mode = None
     labeled_articles_source_file_path = None
-    model_file_path = None
+    doc2vec_model_file_path = None
+    ml_model_file_path = None
     articles_source_file_path = None
     output_file_path = None
 
@@ -16,7 +17,8 @@ def main(argv):
         "usage : article_bias.py " + \
         "--mode [training|evaluation] " + \
         "[--labeled_articles_source_file <labeled_articles_source_file_path>] " + \
-        "--model_file_path <model_file_path> " + \
+        "--doc2vec_model_file_path <doc2vec_model_file_path> " + \
+        "--ml_model_file_path <ml_model_file_path> " + \
         "[--articles_source_file_path <articles_source_file_path>] " + \
         "[--output_file_path <output_file_path>] "
 
@@ -25,8 +27,8 @@ def main(argv):
             getopt.getopt(
                 args=argv,
                 shortopts='h',
-                longopts=['mode=', 'labeled_articles_source_file_path=', 'model_file_path=',
-                          'articles_source_file_path=', 'output_file_path']
+                longopts=['mode=', 'labeled_articles_source_file_path=', 'doc2vec_model_file_path=',
+                          'ml_model_file_path=', 'articles_source_file_path=', 'output_file_path']
             )
     except getopt.GetoptError as e:
         print e
@@ -40,46 +42,48 @@ def main(argv):
             mode = arg
         elif opt == "--labeled_articles_source_file_path":
             labeled_articles_source_file_path = arg
-        elif opt == "--model_file_path":
-            model_file_path = arg
+        elif opt == "--doc2vec_model_file_path":
+            doc2vec_model_file_path = arg
+        elif opt == "--ml_model_file_path":
+            ml_model_file_path = arg
         elif opt == "--articles_source_file_path":
             articles_source_file_path = arg
         elif opt == "--output_file_path":
             output_file_path = arg
 
     validate_arguments_and_process(
-        usage_msg, mode, labeled_articles_source_file_path, model_file_path, articles_source_file_path, output_file_path
+        usage_msg, mode, labeled_articles_source_file_path, doc2vec_model_file_path, ml_model_file_path,
+        articles_source_file_path, output_file_path
     )
 
 
-def validate_arguments_and_process(usage_msg, mode, labeled_articles_source_file_path, model_file_path,
-                                   articles_source_file_path, output_file_path):
+def validate_arguments_and_process(usage_msg, mode, labeled_articles_source_file_path, doc2vec_model_file_path,
+                                   ml_model_file_path, articles_source_file_path, output_file_path):
 
     if not mode:
         print usage_msg
         raise RuntimeError("No mode specified")
 
-    if not model_file_path:
+    if not doc2vec_model_file_path:
         print usage_msg
-        raise RuntimeError("No model_file_path specified")
+        raise RuntimeError("No doc2vec_model_file_path specified")
+
+    if not ml_model_file_path:
+        print usage_msg
+        raise RuntimeError("No ml_model_file_path specified")
 
     if mode == 'training':
         if not labeled_articles_source_file_path:
             print usage_msg
             raise RuntimeError("No labeled_articles_source_file specified")
 
-        model_trainer = ModelTrainer(labeled_articles_source_file_path, model_file_path)
+        model_trainer = ModelTrainer(labeled_articles_source_file_path, doc2vec_model_file_path, ml_model_file_path)
         model_trainer.process()
-
     elif mode == 'evaluation':
-        if not articles_source_file_path:
-            print usage_msg
-            raise RuntimeError("No articles_source_file_path specified")
-        if not output_file_path:
-            print usage_msg
-            raise RuntimeError("No output_file_path specified")
-
-        raise RuntimeError("No output_file_path specified")
+        raise RuntimeError("Not coded yet")
+    else:
+        print usage_msg
+        raise RuntimeError("Invalid option chose for mode")
 
 if __name__ == "__main__":
     main(sys.argv[1:])
