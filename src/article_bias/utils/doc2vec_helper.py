@@ -4,17 +4,18 @@ from gensim.models import Doc2Vec
 from gensim.models.doc2vec import TaggedDocument
 
 
-def get_tagged_articles(articles):
+def get_tagged_articles_scores(articles):
 
     tagged_articles = list()
-    sentiment_scores = list()
+    sentiment_scores_dict = dict()
 
     for article in articles:
-        tagged_article = TaggedDocument(article["title"].split(), "SENT_" + str(article["id"]))
+        article_tag = "ART_" + str(article['id'])
+        tagged_article = TaggedDocument(article['title'].split(), [article_tag])
         tagged_articles.append(tagged_article)
-        sentiment_scores.append()
+        sentiment_scores_dict[article_tag] = article['sentiment']
 
-    return tagged_articles
+    return tagged_articles, sentiment_scores_dict
 
 
 def init_model(tagged_articles):
