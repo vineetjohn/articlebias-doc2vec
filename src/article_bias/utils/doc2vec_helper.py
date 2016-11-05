@@ -29,3 +29,7 @@ def init_model(tagged_articles):
 def shuffle_and_train_articles(model, tagged_articles):
     shuffle(tagged_articles)
     model.train(tagged_articles)
+
+
+def get_tagged_articles_veriday(articles):
+    pass

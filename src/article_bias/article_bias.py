@@ -64,6 +64,10 @@ def validate_arguments_and_process(usage_msg, mode, labeled_articles_source_file
         print usage_msg
         raise RuntimeError("No mode specified")
 
+    if not labeled_articles_source_file_path:
+        print usage_msg
+        raise RuntimeError("No labeled_articles_source_file specified")
+
     if not doc2vec_model_file_path:
         print usage_msg
         raise RuntimeError("No doc2vec_model_file_path specified")
@@ -72,18 +76,17 @@ def validate_arguments_and_process(usage_msg, mode, labeled_articles_source_file
         print usage_msg
         raise RuntimeError("No ml_model_file_path specified")
 
-    if mode == 'training':
-        if not labeled_articles_source_file_path:
-            print usage_msg
-            raise RuntimeError("No labeled_articles_source_file specified")
-
-        model_trainer = ModelTrainer(labeled_articles_source_file_path, doc2vec_model_file_path, ml_model_file_path)
-        model_trainer.process()
-    elif mode == 'evaluation':
-        raise RuntimeError("Not coded yet")
-    else:
+    if not articles_source_file_path:
         print usage_msg
-        raise RuntimeError("Invalid option chose for mode")
+        raise RuntimeError("No articles_source_file_path specified")
+
+    if not output_file_path:
+        print usage_msg
+        raise RuntimeError("No output_file_path specified")
+
+    model_trainer = ModelTrainer(labeled_articles_source_file_path, doc2vec_model_file_path, ml_model_file_path,
+                                 articles_source_file_path, output_file_path)
+    model_trainer.process()
 
 if __name__ == "__main__":
     main(sys.argv[1:])
