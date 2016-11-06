@@ -28,7 +28,7 @@ def main(argv):
                 args=argv,
                 shortopts='h',
                 longopts=['mode=', 'labeled_articles_source_file_path=', 'doc2vec_model_file_path=',
-                          'ml_model_file_path=', 'articles_source_file_path=', 'output_file_path']
+                          'ml_model_file_path=', 'articles_source_file_path=', 'output_file_path=']
             )
     except getopt.GetoptError as e:
         print e

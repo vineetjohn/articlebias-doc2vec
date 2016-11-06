@@ -32,4 +32,27 @@ def shuffle_and_train_articles(model, tagged_articles):
 
 
 def get_tagged_articles_veriday(articles):
-    pass
+
+    tagged_documents = list()
+
+    for article in articles:
+
+        if not article:
+            continue
+
+        article_text = article['value'].strip()
+        article_id = str(article['articleid'].strip())
+        article_version = str(article['version'].strip())
+        article_sentences = article_text.split('.')
+
+        annotations = article['annotations']
+        article_orgs = set(x['entity'] for x in annotations if x['tag'] == "ORG")
+
+        for article_sentence in article_sentences:
+            if not any(org in article_sentence for org in article_orgs):
+                continue
+
+            tagged_sentence = TaggedDocument(words=article_sentence.split(), tags=[article_id, article_version])
+            tagged_documents.append(tagged_sentence)
+
+    return tagged_documents
