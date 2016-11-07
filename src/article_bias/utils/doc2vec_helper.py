@@ -20,7 +20,7 @@ def get_tagged_articles_scores(articles):
 
 def init_model(tagged_articles):
 
-    model = Doc2Vec(min_count=1, size=1000, iter=20, dm=0)
+    model = Doc2Vec(min_count=1, size=1000, iter=20, dm=0, workers=8)
     model.build_vocab(tagged_articles)
 
     return model

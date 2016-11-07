@@ -15,4 +15,4 @@ print doc2vec_model.docvecs['76545']
 ml_model = scikit_ml_helper.get_model_from_disk(ml_model_file_path)
 
 x_docvecs = [doc2vec_model.docvecs['76545']]
-print  ml_model.predict(x_docvecs)
+print ml_model.predict(x_docvecs)
