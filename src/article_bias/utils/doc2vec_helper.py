@@ -2,6 +2,7 @@ from random import shuffle
 
 from gensim.models import Doc2Vec
 from gensim.models.doc2vec import TaggedDocument
+from nltk.tokenize import sent_tokenize, word_tokenize
 
 
 def get_tagged_articles_scores(articles):
@@ -11,7 +12,18 @@ def get_tagged_articles_scores(articles):
 
     for article in articles:
         article_tag = "ART_" + str(article['id'])
-        tagged_article = TaggedDocument(article['title'].split(), [article_tag])
+
+        all_article_text = article['title']
+        if article['articleText']:
+            all_article_text += " " + article['articleText']
+
+        sentence_tokens = sent_tokenize(all_article_text)
+
+        all_words = list()
+        for sentence_token in sentence_tokens:
+            all_words.extend(word_tokenize(sentence_token))
+
+        tagged_article = TaggedDocument(all_words, [article_tag])
         tagged_articles.append(tagged_article)
         sentiment_scores_dict[article_tag] = article['sentiment']
 
@@ -20,7 +32,7 @@ def get_tagged_articles_scores(articles):
 
 def init_model(tagged_articles):
 
-    model = Doc2Vec(min_count=1, size=1000, iter=20, dm=0, workers=8)
+    model = Doc2Vec(min_count=3, size=500, iter=20, workers=4)
     model.build_vocab(tagged_articles)
 
     return model

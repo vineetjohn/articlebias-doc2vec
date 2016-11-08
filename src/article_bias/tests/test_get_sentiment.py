@@ -10,9 +10,9 @@ ml_model_file_path = \
     "ResearchProject/semeval_task/semeval-2017-task-5-subtask-2/regression.model"
 
 doc2vec_model = Doc2Vec.load(doc2vec_model_file_path)
-print doc2vec_model.docvecs['76545']
+# print doc2vec_model.docvecs['163584']
 
 ml_model = scikit_ml_helper.get_model_from_disk(ml_model_file_path)
 
-x_docvecs = [doc2vec_model.docvecs['76545']]
+x_docvecs = [doc2vec_model.docvecs['3278139']]
 print ml_model.predict(x_docvecs)
