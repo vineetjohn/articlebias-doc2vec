@@ -31,12 +31,12 @@ def main(argv):
                           'ml_model_file_path=', 'articles_source_file_path=', 'output_file_path=']
             )
     except getopt.GetoptError as e:
-        print e
-        print usage_msg
+        print(e)
+        print(usage_msg)
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print usage_msg
+            print(usage_msg)
             sys.exit()
         elif opt == "--mode":
             mode = arg
@@ -61,27 +61,27 @@ def validate_arguments_and_process(usage_msg, mode, labeled_articles_source_file
                                    ml_model_file_path, articles_source_file_path, output_file_path):
 
     if not mode:
-        print usage_msg
+        print(usage_msg)
         raise RuntimeError("No mode specified")
 
     if not labeled_articles_source_file_path:
-        print usage_msg
+        print(usage_msg)
         raise RuntimeError("No labeled_articles_source_file specified")
 
     if not doc2vec_model_file_path:
-        print usage_msg
+        print(usage_msg)
         raise RuntimeError("No doc2vec_model_file_path specified")
 
     if not ml_model_file_path:
-        print usage_msg
+        print(usage_msg)
         raise RuntimeError("No ml_model_file_path specified")
 
     if not articles_source_file_path:
-        print usage_msg
+        print(usage_msg)
         raise RuntimeError("No articles_source_file_path specified")
 
     if not output_file_path:
-        print usage_msg
+        print(usage_msg)
         raise RuntimeError("No output_file_path specified")
 
     model_trainer = ModelTrainer(labeled_articles_source_file_path, doc2vec_model_file_path, ml_model_file_path,

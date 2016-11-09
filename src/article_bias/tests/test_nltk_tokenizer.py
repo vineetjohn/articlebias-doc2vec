@@ -20,6 +20,6 @@ article = \
 sentences = sent_tokenize(article)
 
 for sentence in sentences:
-    print sentence
+    print(sentence)
     words = word_tokenize(sentence)
-    print words
+    print(words)

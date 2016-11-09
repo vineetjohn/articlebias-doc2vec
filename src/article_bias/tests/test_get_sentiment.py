@@ -15,4 +15,4 @@ doc2vec_model = Doc2Vec.load(doc2vec_model_file_path)
 ml_model = scikit_ml_helper.get_model_from_disk(ml_model_file_path)
 
 x_docvecs = [doc2vec_model.docvecs['3278139']]
-print ml_model.predict(x_docvecs)
+print(ml_model.predict(x_docvecs))
