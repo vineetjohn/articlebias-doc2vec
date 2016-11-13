@@ -1,3 +1,4 @@
+import json
 from random import shuffle
 
 from gensim.models import Doc2Vec
@@ -32,7 +33,7 @@ def get_tagged_articles_scores(articles):
 
 def init_model(tagged_articles):
 
-    model = Doc2Vec(min_count=3, size=500, iter=20, workers=4)
+    model = Doc2Vec(min_count=10, size=500, iter=20, workers=8)
     model.build_vocab(tagged_articles)
 
     return model
@@ -64,7 +65,47 @@ def get_tagged_articles_veriday(articles):
             if not any(org in article_sentence for org in article_orgs):
                 continue
 
-            tagged_sentence = TaggedDocument(words=article_sentence.split(), tags=[article_id, article_version])
+            tagged_sentence = TaggedDocument(words=article_sentence.split(),
+                                             tags=[str(article_id) + "-" + str(article_version)])
             tagged_documents.append(tagged_sentence)
 
     return tagged_documents
+
+
+def get_tagged_amazon_reviews(input_file_path):
+    """
+    Parses the input review file
+    :return: a list of TaggedDocs for Doc2Vec and a dict of scores
+    """
+
+    tagged_reviews = list()
+    rating_dict = dict()
+    for review in open(input_file_path):
+        identifier, tagged_review, rating = parse_review(json.loads(review))
+
+        tagged_reviews.append(tagged_review)
+        rating_dict[identifier] = rating
+
+    return tagged_reviews, rating_dict
+
+
+def parse_review(review):
+    """
+    :param review: JSON object containing an Amazon review
+    :return: Review Identifier, TaggedDocument for Doc2Vec usage, Review Rating
+    """
+
+    identifier = review['reviewerID'] + review['asin']
+    rating = review['overall']
+
+    review_text = review['reviewText']
+
+    sentence_tokens = sent_tokenize(review_text)
+    all_words = list()
+    for sentence_token in sentence_tokens:
+        all_words.extend(word_tokenize(sentence_token))
+
+    tagged_review = TaggedDocument(words=all_words, tags=[identifier])
+
+    return identifier, tagged_review, rating
+

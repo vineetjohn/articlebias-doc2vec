@@ -2,6 +2,7 @@ import getopt
 import sys
 
 from src.article_bias.processors.model_trainer import ModelTrainer
+from src.article_bias.processors.amazon_processor import AmazonProcessor
 
 
 def main(argv):
@@ -11,7 +12,6 @@ def main(argv):
     doc2vec_model_file_path = None
     ml_model_file_path = None
     articles_source_file_path = None
-    output_file_path = None
 
     usage_msg = \
         "usage : article_bias.py " + \
@@ -19,8 +19,7 @@ def main(argv):
         "[--labeled_articles_source_file <labeled_articles_source_file_path>] " + \
         "--doc2vec_model_file_path <doc2vec_model_file_path> " + \
         "--ml_model_file_path <ml_model_file_path> " + \
-        "[--articles_source_file_path <articles_source_file_path>] " + \
-        "[--output_file_path <output_file_path>] "
+        "[--articles_source_file_path <articles_source_file_path>] "
 
     try:
         opts, args = \
@@ -28,7 +27,7 @@ def main(argv):
                 args=argv,
                 shortopts='h',
                 longopts=['mode=', 'labeled_articles_source_file_path=', 'doc2vec_model_file_path=',
-                          'ml_model_file_path=', 'articles_source_file_path=', 'output_file_path=']
+                          'ml_model_file_path=', 'articles_source_file_path=']
             )
     except getopt.GetoptError as e:
         print(e)
@@ -53,12 +52,12 @@ def main(argv):
 
     validate_arguments_and_process(
         usage_msg, mode, labeled_articles_source_file_path, doc2vec_model_file_path, ml_model_file_path,
-        articles_source_file_path, output_file_path
+        articles_source_file_path
     )
 
 
 def validate_arguments_and_process(usage_msg, mode, labeled_articles_source_file_path, doc2vec_model_file_path,
-                                   ml_model_file_path, articles_source_file_path, output_file_path):
+                                   ml_model_file_path, articles_source_file_path):
 
     if not mode:
         print(usage_msg)
@@ -80,12 +79,11 @@ def validate_arguments_and_process(usage_msg, mode, labeled_articles_source_file
         print(usage_msg)
         raise RuntimeError("No articles_source_file_path specified")
 
-    if not output_file_path:
-        print(usage_msg)
-        raise RuntimeError("No output_file_path specified")
-
-    model_trainer = ModelTrainer(labeled_articles_source_file_path, doc2vec_model_file_path, ml_model_file_path,
-                                 articles_source_file_path, output_file_path)
+    model_trainer = \
+        AmazonProcessor(
+            labeled_articles_source_file_path, doc2vec_model_file_path, ml_model_file_path,
+            articles_source_file_path
+        )
     model_trainer.process()
 
 if __name__ == "__main__":

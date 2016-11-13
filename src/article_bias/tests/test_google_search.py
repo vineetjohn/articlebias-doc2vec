@@ -1,15 +1,8 @@
 import requests
-from google import search, get_page
-from readability import Document
 
-for url in search('EasyJet attracts more passengers in June but still lags Ryanair', num=1, stop=1):
+url = "http://www.google.com/search?q=__KEYWORDS_PLACEHOLDER__&btnI"
 
-    print(url)
-    page = get_page(url)
-    # print(page)
+final_url = url.replace("__KEYWORDS_PLACEHOLDER__", "Morrisons book second consecutive quarter of sales growth")
 
-    response = requests.get(url)
-    # print(response.text)
-
-    doc = Document(response.text)
-    print(doc.content())
+response = requests.get(final_url)
+print(response.text)

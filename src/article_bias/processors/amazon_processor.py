@@ -4,16 +4,15 @@ from src.article_bias.utils import log_helper, file_helper, doc2vec_helper, scik
 log = log_helper.get_logger("ModelTrainer")
 
 
-class ModelTrainer(Processor):
+class AmazonProcessor(Processor):
 
     def __init__(self, labeled_articles_source_file_path, doc2vec_model_file_path, ml_model_file_path,
-                 articles_source_file_path, output_file_path):
+                 articles_source_file_path):
         self.labeled_articles_file_path = labeled_articles_source_file_path
         self.articles_source_file_path = articles_source_file_path
         self.doc2vec_model_file_path = doc2vec_model_file_path
         self.ml_model_file_path = ml_model_file_path
-        self.output_file_path = output_file_path
-        self.shuffle_count = 100
+        self.shuffle_count = 5
 
     def process(self):
 
@@ -24,10 +23,9 @@ class ModelTrainer(Processor):
         veriday_articles_raw = file_helper.get_articles_list(self.articles_source_file_path)
         veriday_tagged_articles = doc2vec_helper.get_tagged_articles_veriday(veriday_articles_raw)
 
-        # Convert articles file into a Tagged documents for doc2vec
-        log.info("Getting tagged Semeval articles ... ")
-        articles = file_helper.get_articles_list(self.labeled_articles_file_path)
-        tagged_articles, sentiment_scores_dict = doc2vec_helper.get_tagged_articles_scores(articles)
+        log.info("Getting tagged Amazon reviews ... ")
+        tagged_articles, sentiment_scores_dict = \
+            doc2vec_helper.get_tagged_amazon_reviews(self.labeled_articles_file_path)
 
         # combine both article sets
         tagged_articles.extend(veriday_tagged_articles)
