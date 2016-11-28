@@ -26,6 +26,14 @@ def train_svm_classifier(x, y):
     return svm_classifier
 
 
+def train_logistic_reg_classifier(x, y):
+
+    logistic_reg_classifier = linear_model.LogisticRegression()
+    logistic_reg_classifier.fit(x, y)
+
+    return logistic_reg_classifier
+
+
 def extract_training_parameters(doc2vec_model, sentiment_scores_dict):
     x_docvecs = list()
     y_scores = list()
