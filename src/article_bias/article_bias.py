@@ -3,6 +3,7 @@ import sys
 
 from src.article_bias.processors.model_trainer import ModelTrainer
 from src.article_bias.processors.amazon_processor import AmazonProcessor
+from src.article_bias.processors.article_classifier import ArticleClassifier
 
 
 def main(argv):
@@ -80,7 +81,7 @@ def validate_arguments_and_process(usage_msg, mode, labeled_articles_source_file
         raise RuntimeError("No articles_source_file_path specified")
 
     model_trainer = \
-        AmazonProcessor(
+        ArticleClassifier(
             labeled_articles_source_file_path, doc2vec_model_file_path, ml_model_file_path,
             articles_source_file_path
         )

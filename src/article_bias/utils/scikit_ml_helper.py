@@ -10,12 +10,20 @@ def train_linear_model(x, y):
     return linear_reg_model
 
 
-def train_svm(x, y):
+def train_svm_regressor(x, y):
 
     svm_regressor = svm.LinearSVR()
     svm_regressor.fit(x, y)
 
     return svm_regressor
+
+
+def train_svm_classifier(x, y):
+
+    svm_classifier = svm.LinearSVC()
+    svm_classifier.fit(x, y)
+
+    return svm_classifier
 
 
 def extract_training_parameters(doc2vec_model, sentiment_scores_dict):

@@ -2,7 +2,7 @@ import json
 from random import shuffle
 
 from gensim.models import Doc2Vec
-from gensim.models.doc2vec import TaggedDocument
+from gensim.models.doc2vec import TaggedDocument, LabeledSentence
 from nltk.tokenize import sent_tokenize, word_tokenize
 
 
@@ -33,7 +33,7 @@ def get_tagged_articles_scores(articles):
 
 def init_model(tagged_articles):
 
-    model = Doc2Vec(min_count=10, size=500, iter=20, workers=8)
+    model = Doc2Vec(min_count=3, size=1000, iter=20, workers=2)
     model.build_vocab(tagged_articles)
 
     return model
@@ -42,6 +42,38 @@ def init_model(tagged_articles):
 def shuffle_and_train_articles(model, tagged_articles):
     shuffle(tagged_articles)
     model.train(tagged_articles)
+
+
+def get_tagged_semeval_articles(semeval_articles):
+
+    tagged_semeval_articles = list()
+    document_sentiment_classes = dict()
+
+    for semeval_article in semeval_articles:
+        if not semeval_article["articleText"]:
+            continue
+
+        print semeval_article
+        all_words = list()
+        sentences = sent_tokenize(semeval_article["articleText"])
+        for sentence in sentences:
+            all_words.extend(word_tokenize(sentence))
+
+        tagged_doc = TaggedDocument(words=all_words, tags=[semeval_article["id"]])
+        tagged_semeval_articles.append(tagged_doc)
+
+        document_sentiment_classes[semeval_article["id"]] = get_document_class(semeval_article["sentiment"])
+
+    return tagged_semeval_articles, document_sentiment_classes
+
+
+def get_document_class(score):
+    if score > 0.33:
+        return "positive"
+    elif score < -0.33:
+        return "negative"
+    else:
+        return "neutral"
 
 
 def get_tagged_articles_veriday(articles):
