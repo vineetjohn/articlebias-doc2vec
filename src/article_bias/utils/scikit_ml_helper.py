@@ -1,5 +1,6 @@
 from sklearn import linear_model, svm
 from sklearn.externals import joblib
+from sklearn.naive_bayes import GaussianNB
 
 
 def train_linear_model(x, y):
@@ -32,6 +33,14 @@ def train_logistic_reg_classifier(x, y):
     logistic_reg_classifier.fit(x, y)
 
     return logistic_reg_classifier
+
+
+def train_gnb_classifier(x, y):
+
+    gnb_classifier = GaussianNB()
+    gnb_classifier.fit(x, y)
+
+    return gnb_classifier
 
 
 def extract_training_parameters(doc2vec_model, sentiment_scores_dict):

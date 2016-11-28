@@ -53,7 +53,7 @@ def get_tagged_semeval_articles(semeval_articles):
         if not semeval_article["articleText"]:
             continue
 
-        print semeval_article
+        # print semeval_article
         all_words = list()
         sentences = sent_tokenize(semeval_article["articleText"])
         for sentence in sentences:

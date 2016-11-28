@@ -23,7 +23,7 @@ veriday_articles_file = \
 
 veriday_classified_articles_file = \
     "/home/v2john/Dropbox/Personal/Academic/Masters/UWaterloo/Academics/ResearchProject/" + \
-    "Veriday/annotated/all_articles_classified.json"
+    "Veriday/annotated/all_articles_nb_classified.json"
 
 
 veriday_articles = file_helper.get_articles_list(veriday_articles_file)

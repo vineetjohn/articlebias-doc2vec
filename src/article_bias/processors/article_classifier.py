@@ -41,7 +41,7 @@ class ArticleClassifier(Processor):
         x_docvecs, y_scores = scikit_ml_helper.extract_training_parameters(doc2vec_model, document_sentiment_classes)
         log.info("Training the ML model ...")
         # ml_model = scikit_ml_helper.train_linear_model(x_docvecs, y_scores)
-        ml_model = scikit_ml_helper.train_logistic_reg_classifier(x_docvecs, y_scores)
+        ml_model = scikit_ml_helper.train_gnb_classifier(x_docvecs, y_scores)
 
         # saving the ml model to disk
         scikit_ml_helper.persist_model_to_disk(ml_model, self.ml_model_file_path)
