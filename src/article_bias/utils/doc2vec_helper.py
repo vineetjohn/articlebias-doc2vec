@@ -2,7 +2,7 @@ import json
 from random import shuffle
 
 from gensim.models import Doc2Vec
-from gensim.models.doc2vec import TaggedDocument, LabeledSentence
+from gensim.models.doc2vec import TaggedDocument
 from nltk.tokenize import sent_tokenize, word_tokenize
 
 
