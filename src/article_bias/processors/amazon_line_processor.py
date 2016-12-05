@@ -51,8 +51,8 @@ class AmazonLineProcessor(Processor):
         ml_model_svm_linear = scikit_ml_helper.train_svm_classifier(x_docvecs, y_scores)
 
         log.info("Saving the ML models to disk")
-        scikit_ml_helper.persist_model_to_disk(ml_model_logreg, self.ml_model_file_path + ".log_reg")
-        scikit_ml_helper.persist_model_to_disk(ml_model_nb, self.ml_model_file_path + ".nb")
-        scikit_ml_helper.persist_model_to_disk(ml_model_svm_linear, self.ml_model_file_path + ".svm_linear")
+        scikit_ml_helper.persist_model_to_disk(ml_model_logreg, self.ml_model_file_path + ".docvec.log_reg")
+        scikit_ml_helper.persist_model_to_disk(ml_model_nb, self.ml_model_file_path + ".docvec.nb")
+        scikit_ml_helper.persist_model_to_disk(ml_model_svm_linear, self.ml_model_file_path + ".docvec.svm_linear")
 
         log.info("Completed execution")

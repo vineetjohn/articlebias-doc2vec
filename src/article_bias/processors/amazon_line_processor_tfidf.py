@@ -44,9 +44,14 @@ class AmazonLineProcessorTfIdf(Processor):
         x_vectors = vectorizer.fit_transform(X_documents)
         log.info("Vectors have been trained")
 
-        ml_model = scikit_ml_helper.train_logistic_reg_classifier(x_vectors, y_scores)
+        log.info("Training the ML models")
+        ml_model_logreg = scikit_ml_helper.train_logistic_reg_classifier(x_vectors, y_scores)
+        ml_model_nb = scikit_ml_helper.train_gnb_classifier(x_vectors, y_scores)
+        ml_model_svm_linear = scikit_ml_helper.train_svm_classifier(x_vectors, y_scores)
 
-        log.info("Saving the ml model to disk")
-        scikit_ml_helper.persist_model_to_disk(ml_model, self.ml_model_file_path)
+        log.info("Saving the ML models to disk")
+        scikit_ml_helper.persist_model_to_disk(ml_model_logreg, self.ml_model_file_path + ".tfidf.log_reg")
+        scikit_ml_helper.persist_model_to_disk(ml_model_nb, self.ml_model_file_path + ".tfidf.nb")
+        scikit_ml_helper.persist_model_to_disk(ml_model_svm_linear, self.ml_model_file_path + ".tfidf.svm_linear")
 
         log.info("Completed execution")
