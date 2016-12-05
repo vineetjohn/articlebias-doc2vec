@@ -143,3 +143,20 @@ def parse_review(review):
 
     return identifier, tagged_review, rating
 
+
+def extract_classification_parameters(doc2vec_model, doc_count):
+    x_docvecs = list()
+    y_scores = list()
+
+    for i in xrange(doc_count/2):
+        x_docvec = doc2vec_model.docvecs['POS_' + str(i)]
+        y_score = "pos"
+        x_docvecs.append(x_docvec)
+        y_scores.append(y_score)
+
+        x_docvec = doc2vec_model.docvecs['NEG_' + str(i)]
+        y_score = "neg"
+        x_docvecs.append(x_docvec)
+        y_scores.append(y_score)
+
+    return x_docvecs, y_scores

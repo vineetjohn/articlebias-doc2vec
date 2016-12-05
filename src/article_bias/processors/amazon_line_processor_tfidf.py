@@ -41,10 +41,10 @@ class AmazonLineProcessorTfIdf(Processor):
                     y_scores.append(y_score)
 
         vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5, stop_words='english')
-        X_vectors = vectorizer.fit_transform(X_documents)
+        x_vectors = vectorizer.fit_transform(X_documents)
         log.info("Vectors have been trained")
 
-        ml_model = scikit_ml_helper.train_logistic_reg_classifier(X_vectors, y_scores)
+        ml_model = scikit_ml_helper.train_logistic_reg_classifier(x_vectors, y_scores)
 
         log.info("Saving the ml model to disk")
         scikit_ml_helper.persist_model_to_disk(ml_model, self.ml_model_file_path)
