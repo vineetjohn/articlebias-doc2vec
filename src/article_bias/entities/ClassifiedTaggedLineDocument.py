@@ -37,6 +37,3 @@ class ClassifiedTaggedLineDocument(TaggedLineDocument):
             with utils.smart_open(self.source) as fin:
                 for item_no, line in enumerate(fin):
                     yield TaggedDocument(utils.to_unicode(line).split(), [self.label + str(item_no)])
-
-    def to_array(self):
-        return self.sentences
