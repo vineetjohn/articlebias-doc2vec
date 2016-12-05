@@ -1,0 +1,4 @@
+{
+    "neg": "/home/v2john/Documents/amazon/books_reviews_neg.txt",
+    "pos": "/home/v2john/Documents/amazon/books_reviews_pos.txt"
+}

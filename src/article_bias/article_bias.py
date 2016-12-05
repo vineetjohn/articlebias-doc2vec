@@ -4,6 +4,7 @@ import sys
 from src.article_bias.processors.model_trainer import ModelTrainer
 from src.article_bias.processors.amazon_processor import AmazonProcessor
 from src.article_bias.processors.article_classifier import ArticleClassifier
+from src.article_bias.processors.amazon_line_processor import AmazonLineProcessor
 
 
 def main(argv):
@@ -13,6 +14,8 @@ def main(argv):
     doc2vec_model_file_path = None
     ml_model_file_path = None
     articles_source_file_path = None
+    shuffle_count = None
+    classification_sources_file_path = None
 
     usage_msg = \
         "usage : article_bias.py " + \
@@ -20,7 +23,9 @@ def main(argv):
         "[--labeled_articles_source_file <labeled_articles_source_file_path>] " + \
         "--doc2vec_model_file_path <doc2vec_model_file_path> " + \
         "--ml_model_file_path <ml_model_file_path> " + \
-        "[--articles_source_file_path <articles_source_file_path>] "
+        "--shuffle_count <shuffle_count> " + \
+        "[--articles_source_file_path <articles_source_file_path>] " + \
+        "--classification_sources_file_path"
 
     try:
         opts, args = \
@@ -28,12 +33,14 @@ def main(argv):
                 args=argv,
                 shortopts='h',
                 longopts=['mode=', 'labeled_articles_source_file_path=', 'doc2vec_model_file_path=',
-                          'ml_model_file_path=', 'articles_source_file_path=']
+                          'ml_model_file_path=', 'shuffle_count=', 'articles_source_file_path=',
+                          'classification_sources_file_path=']
             )
     except getopt.GetoptError as e:
         print(e)
         print(usage_msg)
         sys.exit(2)
+
     for opt, arg in opts:
         if opt == '-h':
             print(usage_msg)
@@ -48,17 +55,20 @@ def main(argv):
             ml_model_file_path = arg
         elif opt == "--articles_source_file_path":
             articles_source_file_path = arg
-        elif opt == "--output_file_path":
-            output_file_path = arg
+        elif opt == "--shuffle_count":
+            shuffle_count = arg
+        elif opt == "--classification_sources_file_path":
+            classification_sources_file_path = arg
 
     validate_arguments_and_process(
         usage_msg, mode, labeled_articles_source_file_path, doc2vec_model_file_path, ml_model_file_path,
-        articles_source_file_path
+        articles_source_file_path, shuffle_count, classification_sources_file_path
     )
 
 
 def validate_arguments_and_process(usage_msg, mode, labeled_articles_source_file_path, doc2vec_model_file_path,
-                                   ml_model_file_path, articles_source_file_path):
+                                   ml_model_file_path, articles_source_file_path, shuffle_count,
+                                   classification_sources_file_path):
 
     if not mode:
         print(usage_msg)
@@ -80,10 +90,14 @@ def validate_arguments_and_process(usage_msg, mode, labeled_articles_source_file
         print(usage_msg)
         raise RuntimeError("No articles_source_file_path specified")
 
+    if not shuffle_count:
+        print(usage_msg)
+        raise RuntimeError("No shuffle_count specified")
+
     model_trainer = \
-        ArticleClassifier(
+        AmazonLineProcessor(
             labeled_articles_source_file_path, doc2vec_model_file_path, ml_model_file_path,
-            articles_source_file_path
+            articles_source_file_path, int(shuffle_count), classification_sources_file_path
         )
     model_trainer.process()
 
