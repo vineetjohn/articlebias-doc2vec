@@ -1,6 +1,8 @@
+import numpy
+
 from sklearn import linear_model, svm
 from sklearn.externals import joblib
-from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import GaussianNB, MultinomialNB
 
 
 def train_linear_model(x, y):
@@ -38,6 +40,14 @@ def train_logistic_reg_classifier(x, y):
 def train_gnb_classifier(x, y):
 
     gnb_classifier = GaussianNB()
+    gnb_classifier.fit(x, y)
+
+    return gnb_classifier
+
+
+def train_gnb_classifier_dense(x, y):
+
+    gnb_classifier = MultinomialNB()
     gnb_classifier.fit(x, y)
 
     return gnb_classifier
