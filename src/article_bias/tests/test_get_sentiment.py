@@ -1,46 +1,42 @@
-import json
-
+import sklearn
 from gensim.models import Doc2Vec
 from nltk import sent_tokenize, word_tokenize
 
 from src.article_bias.utils import scikit_ml_helper, file_helper
 
 doc2vec_model_file_path = \
-    "/home/v2john/books_doc2vec.model"
+    "/home/v2john/Documents/amazon/models/d2vmodels/books_doc2vec.model"
 
 ml_model_file_path = \
-    "/home/v2john/books_ml.model"
+    "/home/v2john/Documents/amazon/models/d2vmodels/books_ml.model.docvec.log_reg"
 
 doc2vec_model = Doc2Vec.load(doc2vec_model_file_path)
 ml_model = scikit_ml_helper.get_model_from_disk(ml_model_file_path)
 
-# x_docvecs = [doc2vec_model.docvecs['403202-30908']]
-# print(ml_model.predict(x_docvecs))
 
-veriday_articles_file = \
-    "/home/v2john/Dropbox/Personal/Academic/Masters/UWaterloo/Academics/ResearchProject/" + \
-    "Veriday/annotated/all_articles.json"
-
-veriday_classified_articles_file = \
-    "/home/v2john/Dropbox/Personal/Academic/Masters/UWaterloo/Academics/ResearchProject/" + \
-    "Veriday/annotated/all_articles_nb_classified.json"
+semeval_classified_articles_file = \
+    "/home/v2john/Dropbox/Personal/Academic/Masters/UWaterloo/Academics/ResearchProject/semeval_task/" + \
+    "semeval-2017-task-5-subtask-2/semeval_combined_fulltext_classified.json"
 
 
-veriday_articles = file_helper.get_articles_list(veriday_articles_file)
+semeval_classified_articles = file_helper.get_articles_list(semeval_classified_articles_file)
 
 article_vectors = list()
 count = 0
 classified_veriday_articles = list()
-for veriday_article in veriday_articles:
+y_true = list()
+
+for semeval_classified_article in semeval_classified_articles:
 
     print 'working on article ' + str(count)
     count += 1
 
-    if not veriday_article['value']:
+    article_text = semeval_classified_article['articleText']
+    if not article_text:
         continue
 
     all_words = list()
-    sentences = sent_tokenize(veriday_article['value'])
+    sentences = sent_tokenize(article_text)
     for sentence in sentences:
         all_words.extend(word_tokenize(sentence))
 
@@ -48,15 +44,14 @@ for veriday_article in veriday_articles:
     article_vectors.append(article_vector)
 
     classified_veriday_article = dict()
-    classified_veriday_article['articleid'] = veriday_article['articleid']
-    classified_veriday_article['value'] = veriday_article['value']
+    classified_veriday_article['id'] = semeval_classified_article['id']
+    classified_veriday_article['articleText'] = semeval_classified_article['articleText']
+    y_true.append(classified_veriday_article['label'])
     classified_veriday_articles.append(classified_veriday_article)
 
 predictions = ml_model.predict(article_vectors)
 
 for i in xrange(len(predictions)):
-    classified_veriday_articles[i]['class'] = predictions[i]
+    classified_veriday_articles[i]['label'] = predictions[i]
 
-with open(veriday_classified_articles_file, 'w') as outfile:
-    json.dump(obj=classified_veriday_articles, fp=outfile,  sort_keys=True, indent=4, separators=(',', ': '))
-print("Completed")
+accuracy = sklearn.metrics.accuracy_score(y_true=y_true, y_pred=predictions, normalize=True, sample_weight=None)
