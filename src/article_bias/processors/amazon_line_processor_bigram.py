@@ -1,18 +1,17 @@
 import json
-import numpy as np
-import sklearn
 
-from sklearn.feature_extraction.text import TfidfVectorizer
+import sklearn
+from sklearn.feature_extraction.text import CountVectorizer
 
 from src.article_bias.processors.processor import Processor
 from src.article_bias.utils import file_helper
 from src.article_bias.utils import log_helper
 from src.article_bias.utils import scikit_ml_helper
 
-log = log_helper.get_logger("AmazonLineProcessor")
+log = log_helper.get_logger("AmazonLineProcessorBigram")
 
 
-class AmazonLineProcessorTfIdf(Processor):
+class AmazonLineProcessorBigram(Processor):
 
     def __init__(self, labeled_articles_source_file_path, doc2vec_model_file_path, ml_model_file_path,
                  articles_source_file_path, shuffle_count, classification_sources_file_path):
@@ -54,8 +53,8 @@ class AmazonLineProcessorTfIdf(Processor):
         semeval_count = 0
         for semeval_classified_article in semeval_classified_articles:
 
-            # article_text = semeval_classified_article['articleText']
-            article_text = semeval_classified_article['title']
+            article_text = semeval_classified_article['articleText']
+            # article_text = semeval_classified_article['title']
 
             if not article_text:
                 continue
@@ -65,7 +64,7 @@ class AmazonLineProcessorTfIdf(Processor):
             y_true.append(semeval_classified_article['label'])
 
         log.info("Initiating training for document vectors")
-        vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5, stop_words='english')
+        vectorizer = CountVectorizer(stop_words='english', ngram_range=(2,2))
         x_vectors = vectorizer.fit_transform(x_documents)
         labelled_docs = x_vectors[(-1*semeval_count):]
 
