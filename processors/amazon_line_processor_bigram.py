@@ -44,7 +44,7 @@ class AmazonLineProcessorBigram(Processor):
                     x_documents.append(x_document)
                     y_scores.append(y_score)
 
-        semeval_classified_articles_file = self.articles_source_file_path
+        semeval_classified_articles_file = self.labeled_articles_file_path
         semeval_classified_articles = file_helper.get_articles_list(semeval_classified_articles_file)
 
         y_true = list()
