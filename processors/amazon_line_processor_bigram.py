@@ -44,9 +44,7 @@ class AmazonLineProcessorBigram(Processor):
                     x_documents.append(x_document)
                     y_scores.append(y_score)
 
-        semeval_classified_articles_file = \
-            "/home/v2john/Dropbox/Personal/Academic/Masters/UWaterloo/Academics/ResearchProject/semeval_task/" + \
-            "semeval-2017-task-5-subtask-2/semeval_combined_fulltext_classified.json"
+        semeval_classified_articles_file = self.articles_source_file_path
         semeval_classified_articles = file_helper.get_articles_list(semeval_classified_articles_file)
 
         y_true = list()
