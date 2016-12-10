@@ -1,4 +1,4 @@
-import numpy
+import pandas as pd
 
 from sklearn import linear_model, svm
 from sklearn.externals import joblib
@@ -70,3 +70,12 @@ def persist_model_to_disk(model, model_path):
 
 def get_model_from_disk(model_path):
     return joblib.load(model_path)
+
+
+def get_confusion_matrix(y_true, y_predicted):
+
+    y_actu = pd.Series(y_true, name='Actual')
+    y_pred = pd.Series(y_predicted, name='Predicted')
+    df_confusion = pd.crosstab(y_actu, y_pred)
+
+    return df_confusion

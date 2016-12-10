@@ -2,6 +2,7 @@ import json
 
 import sklearn
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics import confusion_matrix
 
 from src.article_bias.processors.processor import Processor
 from src.article_bias.utils import file_helper
@@ -94,5 +95,9 @@ class AmazonLineProcessorBigram(Processor):
         log.info("accuracy_logreg: " + str(accuracy_logreg))
         log.info("accuracy_linearsvm: " + str(accuracy_linearsvm))
         log.info("accuracy_nb: " + str(accuracy_nb))
+
+        log.info("\ncm_logreg\n"+ str(scikit_ml_helper.get_confusion_matrix(y_true, predictions_logreg)))
+        log.info("\ncm_linearsvm\n"+ str(scikit_ml_helper.get_confusion_matrix(y_true, predictions_linearsvm)))
+        log.info("\ncm_nb\n"+ str(scikit_ml_helper.get_confusion_matrix(y_true, predictions_nb)))
 
         log.info("Completed execution")
