@@ -1,12 +1,7 @@
-import numpy as np
-
 import sklearn
-from gensim.models import Doc2Vec
-from nltk import sent_tokenize, word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-from src.article_bias.utils import scikit_ml_helper, file_helper
-
+from utils import scikit_ml_helper, file_helper
 
 ml_model_file_path = "/home/v2john/Documents/amazon/models/books_ml_tfidf.model.tfidf.log_reg"
 ml_model = scikit_ml_helper.get_model_from_disk(ml_model_file_path)

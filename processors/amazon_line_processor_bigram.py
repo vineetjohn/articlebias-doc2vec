@@ -1,17 +1,17 @@
 import json
 
 import sklearn
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
+from utils import file_helper
+from utils import scikit_ml_helper
 
-from src.article_bias.processors.processor import Processor
-from src.article_bias.utils import file_helper
-from src.article_bias.utils import log_helper
-from src.article_bias.utils import scikit_ml_helper
+from processors.processor import Processor
+from utils import log_helper
 
-log = log_helper.get_logger("AmazonLineProcessorTFIDF")
+log = log_helper.get_logger("AmazonLineProcessorBigram")
 
 
-class AmazonLineProcessorTfIdf(Processor):
+class AmazonLineProcessorBigram(Processor):
 
     def __init__(self, labeled_articles_source_file_path, doc2vec_model_file_path, ml_model_file_path,
                  articles_source_file_path, shuffle_count, classification_sources_file_path):
@@ -53,8 +53,8 @@ class AmazonLineProcessorTfIdf(Processor):
         semeval_count = 0
         for semeval_classified_article in semeval_classified_articles:
 
-            # article_text = semeval_classified_article['articleText']
-            article_text = semeval_classified_article['title']
+            article_text = semeval_classified_article['articleText']
+            # article_text = semeval_classified_article['title']
 
             if not article_text:
                 continue
@@ -64,16 +64,16 @@ class AmazonLineProcessorTfIdf(Processor):
             y_true.append(semeval_classified_article['label'])
 
         log.info("Initiating training for document vectors")
-        vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5, stop_words='english')
+        vectorizer = CountVectorizer(stop_words='english', ngram_range=(2,2))
         x_vectors = vectorizer.fit_transform(x_documents)
         labelled_docs = x_vectors[(-1*semeval_count):]
 
         log.info("Vectors have been trained")
 
         log.info("Training the ML models")
-        ml_model_logreg = scikit_ml_helper.train_logistic_reg_classifier(x_vectors[:(-1*semeval_count)], y_scores)
-        ml_model_nb = scikit_ml_helper.train_gnb_classifier_dense(x_vectors[:(-1*semeval_count)], y_scores)
-        ml_model_svm_linear = scikit_ml_helper.train_svm_classifier(x_vectors[:(-1*semeval_count)], y_scores)
+        ml_model_logreg = scikit_ml_helper.train_logistic_reg_classifier(x_vectors[:(-1 * semeval_count)], y_scores)
+        ml_model_nb = scikit_ml_helper.train_gnb_classifier_dense(x_vectors[:(-1 * semeval_count)], y_scores)
+        ml_model_svm_linear = scikit_ml_helper.train_svm_classifier(x_vectors[:(-1 * semeval_count)], y_scores)
 
         log.info("Saving the ML models to disk")
         scikit_ml_helper.persist_model_to_disk(ml_model_logreg, self.ml_model_file_path + ".tfidf.log_reg")
@@ -95,8 +95,8 @@ class AmazonLineProcessorTfIdf(Processor):
         log.info("accuracy_linearsvm: " + str(accuracy_linearsvm))
         log.info("accuracy_nb: " + str(accuracy_nb))
 
-        log.info("\ncm_logreg\n"+ str(scikit_ml_helper.get_confusion_matrix(y_true, predictions_logreg)))
-        log.info("\ncm_linearsvm\n"+ str(scikit_ml_helper.get_confusion_matrix(y_true, predictions_linearsvm)))
-        log.info("\ncm_nb\n"+ str(scikit_ml_helper.get_confusion_matrix(y_true, predictions_nb)))
+        log.info("\ncm_logreg\n" + str(scikit_ml_helper.get_confusion_matrix(y_true, predictions_logreg)))
+        log.info("\ncm_linearsvm\n" + str(scikit_ml_helper.get_confusion_matrix(y_true, predictions_linearsvm)))
+        log.info("\ncm_nb\n" + str(scikit_ml_helper.get_confusion_matrix(y_true, predictions_nb)))
 
         log.info("Completed execution")

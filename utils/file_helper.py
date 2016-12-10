@@ -1,8 +1,7 @@
+import itertools
 import json
 
-import itertools
-
-from src.article_bias.entities.ClassifiedTaggedLineDocument import ClassifiedTaggedLineDocument
+from entities.classified_tagged_line_document import ClassifiedTaggedLineDocument
 
 
 def get_articles_list(articles_file_path):

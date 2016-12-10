@@ -1,5 +1,5 @@
-from src.article_bias.processors.processor import Processor
-from src.article_bias.utils import log_helper, file_helper, doc2vec_helper, scikit_ml_helper
+from processors.processor import Processor
+from utils import log_helper, file_helper, doc2vec_helper, scikit_ml_helper
 
 log = log_helper.get_logger("ModelTrainer")
 

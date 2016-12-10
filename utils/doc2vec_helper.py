@@ -5,8 +5,6 @@ from gensim.models import Doc2Vec
 from gensim.models.doc2vec import TaggedDocument
 from nltk.tokenize import sent_tokenize, word_tokenize
 
-from src.article_bias.utils import file_helper
-
 
 def get_tagged_articles_scores(articles):
 

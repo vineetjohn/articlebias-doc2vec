@@ -2,7 +2,7 @@ import sklearn
 from gensim.models import Doc2Vec
 from nltk import sent_tokenize, word_tokenize
 
-from src.article_bias.utils import scikit_ml_helper, file_helper
+from utils import scikit_ml_helper, file_helper
 
 doc2vec_model_file_path = \
     "/home/v2john/Documents/amazon/models/books_doc2vec.model"

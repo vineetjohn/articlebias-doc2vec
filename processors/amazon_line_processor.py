@@ -1,9 +1,8 @@
-from gensim import utils
-from gensim.models.doc2vec import TaggedDocument
+from utils import file_helper, doc2vec_helper
+from utils import scikit_ml_helper
 
-from src.article_bias.processors.processor import Processor
-from src.article_bias.utils import log_helper, file_helper, doc2vec_helper
-from src.article_bias.utils import scikit_ml_helper
+from processors.processor import Processor
+from utils import log_helper
 
 log = log_helper.get_logger("AmazonLineProcessor")
 

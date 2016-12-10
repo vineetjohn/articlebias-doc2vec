@@ -1,12 +1,8 @@
 import getopt
 import sys
 
-from src.article_bias.processors.model_trainer import ModelTrainer
-from src.article_bias.processors.amazon_processor import AmazonProcessor
-from src.article_bias.processors.article_classifier import ArticleClassifier
-from src.article_bias.processors.amazon_line_processor import AmazonLineProcessor
-from src.article_bias.processors.amazon_line_processor_tfidf import AmazonLineProcessorTfIdf
-from src.article_bias.processors.amazon_line_processor_bigram import AmazonLineProcessorBigram
+from processors.amazon_line_processor_tfidf import AmazonLineProcessorTfIdf
+from processors.amazon_line_processor_bigram import AmazonLineProcessorBigram
 
 
 def main(argv):
@@ -97,7 +93,7 @@ def validate_arguments_and_process(usage_msg, mode, labeled_articles_source_file
         raise RuntimeError("No shuffle_count specified")
 
     model_trainer = \
-        AmazonLineProcessorTfIdf(
+        AmazonLineProcessorBigram(
             labeled_articles_source_file_path, doc2vec_model_file_path, ml_model_file_path,
             articles_source_file_path, int(shuffle_count), classification_sources_file_path
         )

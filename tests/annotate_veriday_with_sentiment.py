@@ -1,6 +1,8 @@
 import json
-from src.article_bias.utils import scikit_ml_helper
+
 from gensim.models import Doc2Vec
+
+from utils import scikit_ml_helper
 
 
 def get_sentiment_from_rating(rating):
