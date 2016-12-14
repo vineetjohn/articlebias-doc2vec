@@ -33,15 +33,12 @@ def get_tagged_articles_scores(articles):
 
 def init_model(tagged_articles):
 
-    model = Doc2Vec(min_count=3, size=1000, iter=20, workers=4)
+    model = Doc2Vec(min_count=3, size=1000, iter=20, workers=8)
     model.build_vocab(tagged_articles)
 
-    return model
-
-
-def shuffle_and_train_articles(model, tagged_articles):
-    shuffle(tagged_articles)
     model.train(tagged_articles)
+
+    return model
 
 
 def get_tagged_semeval_articles(semeval_articles):

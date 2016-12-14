@@ -33,10 +33,6 @@ class AmazonLineProcessor(Processor):
         doc2vec_model = doc2vec_helper.init_model(sentences)
         log.info("Learnt vocab from training set")
 
-        for i in range(self.shuffle_count):
-            log.info("Shuffles remaining: " + str(self.shuffle_count - i))
-            doc2vec_helper.shuffle_and_train_articles(doc2vec_model, sentences)
-
         # saving the doc2vec model to disk
         doc2vec_model.save(self.doc2vec_model_file_path)
 
