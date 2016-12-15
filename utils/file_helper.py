@@ -11,6 +11,12 @@ def get_articles_list(articles_file_path):
     return json.loads(articles_data)
 
 
+def get_file_iterable(file_path):
+    with open(file_path, "r") as file_pointer:
+        for line in file_pointer:
+            yield line
+
+
 def get_reviews_iterator(sources_file_path):
 
     with open(sources_file_path) as source_cfg:
