@@ -31,9 +31,7 @@ def train_svm_classifier(x, y):
 
 def train_logistic_reg_classifier(x, y):
 
-    class_weight = {0: 1, 1: 10}
-
-    logistic_reg_classifier = linear_model.LogisticRegression(class_weight=class_weight, n_jobs=8)
+    logistic_reg_classifier = linear_model.LogisticRegression()
     logistic_reg_classifier.fit(x, y)
 
     return logistic_reg_classifier
