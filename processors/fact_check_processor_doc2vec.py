@@ -9,7 +9,7 @@ from sklearn import metrics
 log = log_helper.get_logger("FactCheckProcessor")
 
 
-class FactCheckProcessor(Processor):
+class FactCheckProcessorDocvec(Processor):
 
     def __init__(self, labeled_articles_source_file_path, doc2vec_model_file_path, ml_model_file_path,
                  articles_source_file_path, shuffle_count, classification_sources_file_path):
@@ -30,7 +30,8 @@ class FactCheckProcessor(Processor):
 
         log.info("Training Doc2Vec model")
         doc2vec_model = doc2vec_helper.init_model(tagged_docs)
-        log.info("Learnt vocab from training set")
+        doc2vec_model.save(self.doc2vec_model_file_path)
+        log.info("Learnt vocab from training set and saved doc2vec model")
 
         x_train = list()
         with open(self.labeled_articles_file_path) as training_set:
@@ -49,6 +50,7 @@ class FactCheckProcessor(Processor):
         y_true.extend([0] * self.samples_per_class_test)
 
         ml_model_logreg = scikit_ml_helper.train_logistic_reg_classifier(x_train, y_train)
+        scikit_ml_helper.persist_model_to_disk(ml_model_logreg, self.ml_model_file_path)
         y_pred = ml_model_logreg.predict(x_test)
         log.info("Logistic Regression")
         log.info("y_pred: " + str(y_pred))

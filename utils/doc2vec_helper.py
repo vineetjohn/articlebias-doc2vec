@@ -155,3 +155,4 @@ def extract_classification_parameters(doc2vec_model, doc_count):
         y_scores.append(y_score)
 
     return x_docvecs, y_scores
+
