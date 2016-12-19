@@ -1,4 +1,4 @@
-import json
+import pickle
 
 from gensim.models.doc2vec import TaggedLineDocument
 from gensim.similarities.docsim import Similarity
@@ -47,9 +47,9 @@ class FactCheckProcessorDocvec(Processor):
         avg_x_sub = sum(x_train[self.samples_per_class_train:]) / float(self.samples_per_class_train)\
 
         with open('/home/v2john/avg_x_obj', 'w') as obj_avg_file:
-            json.dump(avg_x_obj, obj_avg_file)
+            pickle.dump(avg_x_obj, obj_avg_file)
         with open('/home/v2john/avg_x_sub', 'w') as sub_avg_file:
-            json.dump(avg_x_sub, sub_avg_file)
+            pickle.dump(avg_x_sub, sub_avg_file)
 
         y_train = [0] * self.samples_per_class_train
         y_train.extend([1] * self.samples_per_class_train)
