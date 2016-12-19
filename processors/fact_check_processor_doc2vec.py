@@ -1,10 +1,15 @@
+import json
+
 from gensim.models.doc2vec import TaggedLineDocument
+from gensim.similarities.docsim import Similarity
 
 from processors.processor import Processor
 from utils import doc2vec_helper
 from utils import log_helper
 from utils import scikit_ml_helper
 from sklearn import metrics
+
+import numpy as np
 
 log = log_helper.get_logger("FactCheckProcessor")
 
@@ -38,6 +43,14 @@ class FactCheckProcessorDocvec(Processor):
             for line in training_set:
                 x_train.append(doc2vec_model.infer_vector(line))
 
+        avg_x_obj = sum(x_train[:self.samples_per_class_train]) / float(self.samples_per_class_train)
+        avg_x_sub = sum(x_train[self.samples_per_class_train:]) / float(self.samples_per_class_train)\
+
+        with open('/home/v2john/avg_x_obj', 'w') as obj_avg_file:
+            json.dump(avg_x_obj, obj_avg_file)
+        with open('/home/v2john/avg_x_sub', 'w') as sub_avg_file:
+            json.dump(avg_x_sub, sub_avg_file)
+
         y_train = [0] * self.samples_per_class_train
         y_train.extend([1] * self.samples_per_class_train)
 
@@ -49,26 +62,32 @@ class FactCheckProcessorDocvec(Processor):
         y_true = [1] * self.samples_per_class_test
         y_true.extend([0] * self.samples_per_class_test)
 
-        ml_model_logreg = scikit_ml_helper.train_logistic_reg_classifier(x_train, y_train)
-        scikit_ml_helper.persist_model_to_disk(ml_model_logreg, self.ml_model_file_path)
-        y_pred = ml_model_logreg.predict(x_test)
-        log.info("Logistic Regression")
-        log.info("Precision: " + str(metrics.precision_score(y_pred=y_pred, y_true=y_true)))
-        log.info("Recall: " + str(metrics.recall_score(y_pred=y_pred, y_true=y_true)))
-        log.info("Accuracy: " + str(metrics.accuracy_score(y_pred=y_pred, y_true=y_true)))
-
-        ml_model_svm = scikit_ml_helper.train_svm_classifier(x_train, y_train)
-        y_pred = ml_model_svm.predict(x_test)
-        log.info("SVM")
-        log.info("Precision: " + str(metrics.precision_score(y_pred=y_pred, y_true=y_true)))
-        log.info("Recall: " + str(metrics.recall_score(y_pred=y_pred, y_true=y_true)))
-        log.info("Accuracy: " + str(metrics.accuracy_score(y_pred=y_pred, y_true=y_true)))
-
-        ml_model_nb = scikit_ml_helper.train_gnb_classifier(x_train, y_train)
-        y_pred = ml_model_nb.predict(x_test)
-        log.info("Naive Bayes")
-        log.info("Precision: " + str(metrics.precision_score(y_pred=y_pred, y_true=y_true)))
-        log.info("Recall: " + str(metrics.recall_score(y_pred=y_pred, y_true=y_true)))
-        log.info("Accuracy: " + str(metrics.accuracy_score(y_pred=y_pred, y_true=y_true)))
+        # for i in xrange(len(y_true)):
+        #     log.info("Compared to objective")
+        #     log.info(metrics.pairwise.cosine_similarity(np.array(x_test[i]).reshape(1, -1), np.array(avg_x_obj).reshape(1, -1)))
+        #     log.info("Compared to subjective")
+        #     log.info(metrics.pairwise.cosine_similarity(np.array(x_test[i]).reshape(1, -1), np.array(avg_x_sub).reshape(1, -1)))
+        #
+        # ml_model_logreg = scikit_ml_helper.train_logistic_reg_classifier(x_train, y_train)
+        # scikit_ml_helper.persist_model_to_disk(ml_model_logreg, self.ml_model_file_path)
+        # y_pred = ml_model_logreg.predict(x_test)
+        # log.info("Logistic Regression")
+        # log.info("Precision: " + str(metrics.precision_score(y_pred=y_pred, y_true=y_true)))
+        # log.info("Recall: " + str(metrics.recall_score(y_pred=y_pred, y_true=y_true)))
+        # log.info("Accuracy: " + str(metrics.accuracy_score(y_pred=y_pred, y_true=y_true)))
+        #
+        # ml_model_svm = scikit_ml_helper.train_svm_classifier(x_train, y_train)
+        # y_pred = ml_model_svm.predict(x_test)
+        # log.info("SVM")
+        # log.info("Precision: " + str(metrics.precision_score(y_pred=y_pred, y_true=y_true)))
+        # log.info("Recall: " + str(metrics.recall_score(y_pred=y_pred, y_true=y_true)))
+        # log.info("Accuracy: " + str(metrics.accuracy_score(y_pred=y_pred, y_true=y_true)))
+        #
+        # ml_model_nb = scikit_ml_helper.train_gnb_classifier(x_train, y_train)
+        # y_pred = ml_model_nb.predict(x_test)
+        # log.info("Naive Bayes")
+        # log.info("Precision: " + str(metrics.precision_score(y_pred=y_pred, y_true=y_true)))
+        # log.info("Recall: " + str(metrics.recall_score(y_pred=y_pred, y_true=y_true)))
+        # log.info("Accuracy: " + str(metrics.accuracy_score(y_pred=y_pred, y_true=y_true)))
 
         log.info("Completed execution")
