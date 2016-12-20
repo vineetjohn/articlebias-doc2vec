@@ -9,19 +9,19 @@ from utils import log_helper
 from sklearn import metrics
 
 doc2vec_model_path = \
-    "/home/v2john/Dropbox/Personal/Academic/Masters/UWaterloo/Academics/" + \
+    "/home/v2john/Dropbox/Personal/Academic/Masters/UWaterloo/" + \
     "ResearchProject/Veriday/2class/models/doc2vec.model"
 
 ml_model_path = \
-    "/home/v2john/Dropbox/Personal/Academic/Masters/UWaterloo/Academics/" + \
+    "/home/v2john/Dropbox/Personal/Academic/Masters/UWaterloo/" + \
     "ResearchProject/Veriday/2class/models/ml.model.d2v.logreg"
 
 veriday_articles_path = \
-    "/home/v2john/Dropbox/Personal/Academic/Masters/UWaterloo/Academics/" + \
+    "/home/v2john/Dropbox/Personal/Academic/Masters/UWaterloo/" + \
     "ResearchProject/Veriday/annotated/all_articles.json"
 
 veriday_predicted_articles_path = \
-    "/home/v2john/Dropbox/Personal/Academic/Masters/UWaterloo/Academics/" + \
+    "/home/v2john/Dropbox/Personal/Academic/Masters/UWaterloo/" + \
     "ResearchProject/Veriday/annotated/all_articles_predicted_new.json"
 
 avg_x_obj_path = "/home/v2john/avg_x_obj"
@@ -55,6 +55,7 @@ x_vectors = list()
 predicted_veriday_article = dict()
 
 counter = 0
+f = open(veriday_predicted_articles_path, 'w')
 for veriday_article in veriday_articles:
     if veriday_article['value']:
         log.info("Vectorizing article " + str(counter))
@@ -65,8 +66,6 @@ for veriday_article in veriday_articles:
         x_vector = doc2vec_model.infer_vector(predicted_veriday_article['value'])
         obj_sim = metrics.pairwise.cosine_similarity(np.array(x_vector).reshape(1, -1), np.array(avg_x_obj).reshape(1, -1))
         sub_sim = metrics.pairwise.cosine_similarity(np.array(x_vector).reshape(1, -1), np.array(avg_x_sub).reshape(1, -1))
-        log.info("obj_dist: " + str(obj_sim[0][0]))
-        log.info("sub_dist: " + str(sub_sim[0][0]))
 
         if obj_sim >= sub_sim:
             predicted_veriday_article['prediction'] = "Objective"
@@ -75,7 +74,8 @@ for veriday_article in veriday_articles:
 
         x_vectors.append(x_vector)
 
-        predicted_veriday_articles.append(predicted_veriday_article)
+        # predicted_veriday_articles.append(predicted_veriday_article)
+        f.write(str(json.dumps(predicted_veriday_article)) + "\n")
         counter += 1
 
 log.info("Veriday article have been vectorized")
@@ -94,7 +94,7 @@ log.info("Veriday article have been vectorized")
 #                   ": " + str(y_pred))
 log.info("Articles have been annotated with predictions")
 
-with open(veriday_predicted_articles_path, 'w') as veriday_predicted_articles_file:
-    json.dump(obj=predicted_veriday_articles, fp=veriday_predicted_articles_file,
-              sort_keys=True, indent=4, separators=(',', ': '))
+# with open(veriday_predicted_articles_path, 'w') as veriday_predicted_articles_file:
+#     json.dump(obj=predicted_veriday_articles, fp=veriday_predicted_articles_file,
+#               sort_keys=True, indent=4, separators=(',', ': '))
 log.info("Predictions have been dumped to file")
