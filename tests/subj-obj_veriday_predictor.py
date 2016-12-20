@@ -22,7 +22,7 @@ veriday_articles_path = \
 
 veriday_predicted_articles_path = \
     "/home/v2john/Dropbox/Personal/Academic/Masters/UWaterloo/" + \
-    "ResearchProject/Veriday/annotated/all_articles_predicted_new.json"
+    "ResearchProject/Veriday/annotated/all_articles_predicted.txt"
 
 avg_x_obj_path = "/home/v2john/avg_x_obj"
 avg_x_sub_path = "/home/v2john/avg_x_sub"
